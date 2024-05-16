@@ -24,14 +24,14 @@ public class ImageController : ControllerBase
         return Ok();
     }
 
-    [HttpDelete]
-    public async Task<IActionResult> DeleteByIdAsync([FromQuery] Guid id)
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteByIdAsync(Guid id)
     {
         // input: id
         return Ok();
     }
 
-    [HttpGet("byProductId")]
+    [HttpGet("byProductId/{productId}")]
     public async Task<IActionResult> GetByProductIdAsync(Guid productId)
     {
         // input: productId

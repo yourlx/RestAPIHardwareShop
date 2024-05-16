@@ -24,8 +24,8 @@ public class ClientController : ControllerBase
         return Ok();
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetByFullNameAsync([FromQuery] string name, [FromQuery] string surname)
+    [HttpGet("{name}/{surname}")]
+    public async Task<IActionResult> GetByFullNameAsync(string name, string surname)
     {
         // input: name, surname
         return Ok();
