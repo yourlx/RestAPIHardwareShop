@@ -12,7 +12,7 @@ public class ClientRepository : IClientRepository
     {
         _context = context;
     }
-    
+
     public async Task AddAsync(Client item)
     {
         await _context.Clients.AddAsync(item);
@@ -21,16 +21,16 @@ public class ClientRepository : IClientRepository
 
     public async Task<IEnumerable<Client>> GetAsync()
     {
-        return await _context.Clients.ToListAsync();
+        return await _context.Clients.Include(x => x.Address).ToListAsync();
     }
 
     public async Task<Client> GetAsync(Guid id)
     {
-        var client = await _context.Clients.FirstOrDefaultAsync(x => x.Id == id);
+        var client = await _context.Clients.Include(x => x.Address).FirstOrDefaultAsync(x => x.Id == id);
 
         if (client is null)
         {
-            throw new Exception($"Client with id = {id} not found!");
+            throw new ClientNotFoundException($"Client with id = {id} not found!");
         }
 
         return client;

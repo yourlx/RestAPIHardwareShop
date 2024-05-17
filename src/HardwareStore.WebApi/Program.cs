@@ -1,5 +1,6 @@
 using HardwareStore.WebApi.Context;
 using HardwareStore.WebApi.Data;
+using HardwareStore.WebApi.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,7 +14,7 @@ builder.Services.AddScoped<IImageRepository, ImageRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ISupplierRepository, SupplierRepository>();
 
-// builder.Services.AddScoped<IImageService, ImageService>();
+builder.Services.AddScoped<IClientService, ClientService>();
 
 builder.Services.AddControllers();
 

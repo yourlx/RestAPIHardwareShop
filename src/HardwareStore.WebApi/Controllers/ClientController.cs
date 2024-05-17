@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using HardwareStore.WebApi.Data;
+using HardwareStore.WebApi.DTO;
+using HardwareStore.WebApi.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HardwareStore.WebApi.Controllers;
 
@@ -6,42 +9,97 @@ namespace HardwareStore.WebApi.Controllers;
 [Route("api/v1/clients")]
 public class ClientController : ControllerBase
 {
-    public ClientController()
+    private readonly IClientService _clientService;
+    
+    public ClientController(IClientService clientService)
     {
+        _clientService = clientService;
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateAsync()
+    public async Task<IActionResult> CreateAsync([FromBody] ClientDto client)
     {
-        // input: json of client
-        return Ok();
+        try
+        {
+            await _clientService.CreateAsync(client);
+            
+            return Ok();
+        }
+        catch (Exception exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error");
+        }
     }
 
     [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteAsync(Guid id)
+    public async Task<IActionResult> DeleteAsync([FromRoute] Guid id)
     {
-        // input: id
-        return Ok();
+        try
+        {
+            await _clientService.DeleteAsync(id);
+
+            return Ok();
+        }
+        catch (ClientNotFoundException exception)
+        {
+            return BadRequest(exception.Message);
+        }
+        catch (Exception exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error");
+        }
     }
 
     [HttpGet("{name}/{surname}")]
-    public async Task<IActionResult> GetByFullNameAsync(string name, string surname)
+    public async Task<IActionResult> GetByFullNameAsync([FromRoute] string name, [FromRoute] string surname)
     {
-        // input: name, surname
-        return Ok();
+        try
+        {
+            var result = await _clientService.GetByFullNameAsync(name, surname);
+            
+            return Ok(result);
+        }
+        catch (ClientNotFoundException exception)
+        {
+            return BadRequest(exception.Message);
+        }
+        catch (Exception exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error");
+        }
     }
 
-    [HttpGet]
+    [HttpGet("all")]
     public async Task<IActionResult> GetAllAsync([FromQuery] int? limit, [FromQuery] int? offset)
     {
-        // limit && offset, if empty return all
-        return Ok();
+        try
+        {
+            var result = await _clientService.GetAllAsync(limit, offset);
+            
+            return Ok(result);
+        }
+        catch (Exception exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error");
+        }
     }
 
-    [HttpPatch]
-    public async Task<IActionResult> UpdateAddressAsync()
+    [HttpPatch("{id}")]
+    public async Task<IActionResult> UpdateAddressAsync([FromRoute] Guid id, [FromBody] AddressDto newAddress)
     {
-        // input: id, address json
-        return Ok();
+        try
+        {
+            await _clientService.UpdateAddressAsync(id, newAddress);
+            
+            return Ok();
+        }
+        catch (ClientNotFoundException exception)
+        {
+            return BadRequest(exception.Message);
+        }
+        catch (Exception exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error");
+        }
     }
 }
