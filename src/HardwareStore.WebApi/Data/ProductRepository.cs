@@ -42,11 +42,11 @@ public class ProductRepository : IProductRepository
 
         product.Available = item.Available;
         product.Category = item.Category;
-        product.ImageId = item.ImageId;
+        product.Image = item.Image;
         product.Name = item.Name;
         product.Price = item.Price;
         product.LastUpdate = item.LastUpdate;
-        product.SupplierId = item.SupplierId;
+        product.Supplier = item.Supplier;
 
         await _context.SaveChangesAsync();
     }

@@ -41,7 +41,7 @@ public class SupplierRepository : ISupplierRepository
         var supplier = await GetAsync(item.Id);
 
         supplier.Name = item.Name;
-        supplier.AddressId = item.AddressId;
+        supplier.Address = item.Address;
         supplier.PhoneNumber = item.PhoneNumber;
 
         await _context.SaveChangesAsync();

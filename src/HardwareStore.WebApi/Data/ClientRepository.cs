@@ -43,7 +43,7 @@ public class ClientRepository : IClientRepository
         client.Birthday = item.Birthday;
         client.Gender = item.Gender;
         client.Name = item.Name;
-        client.AddressId = item.AddressId;
+        client.Address = item.Address;
         client.Surname = item.Surname;
         client.RegistrationDate = item.RegistrationDate;
 
