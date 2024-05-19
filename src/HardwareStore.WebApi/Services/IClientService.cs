@@ -12,5 +12,5 @@ public interface IClientService
     
     Task<IEnumerable<ClientDto>> GetAllAsync(int? limit, int? offset);
     
-    Task UpdateAddressAsync(Guid id, AddressDto newAddress);
+    Task UpdateAddressAsync(Guid id, AddressDto newAddressDto);
 }

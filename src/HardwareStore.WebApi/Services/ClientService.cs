@@ -1,4 +1,5 @@
-﻿using HardwareStore.WebApi.Data;
+﻿using AutoMapper;
+using HardwareStore.WebApi.Data;
 using HardwareStore.WebApi.DTO;
 using HardwareStore.WebApi.Models;
 
@@ -6,34 +7,22 @@ namespace HardwareStore.WebApi.Services;
 
 public class ClientService : IClientService
 {
+    private readonly IMapper _mapper;
     private readonly IClientRepository _clientRepository;
     private readonly IAddressRepository _addressRepository;
 
-    public ClientService(IClientRepository clientRepository, IAddressRepository addressRepository)
+    public ClientService(IMapper mapper, IClientRepository clientRepository, IAddressRepository addressRepository)
     {
+        _mapper = mapper;
         _clientRepository = clientRepository;
         _addressRepository = addressRepository;
     }
 
     public async Task CreateAsync(ClientDto clientDto)
     {
-        // todo: automapper or converter?
-        var client = new Client()
-        {
-            Id = new Guid(),
-            Name = clientDto.Name,
-            Surname = clientDto.Surname,
-            Address = new Address()
-            {
-                Id = new Guid(),
-                City = clientDto.Address.City,
-                Country = clientDto.Address.Country,
-                Street = clientDto.Address.Street,
-            },
-            Birthday = clientDto.Birthday,
-            Gender = clientDto.Gender,
-            RegistrationDate = DateTime.UtcNow,
-        };
+        var client = _mapper.Map<Client>(clientDto);
+        client.Id = new Guid();
+        client.RegistrationDate = DateTime.UtcNow;
 
         await _clientRepository.AddAsync(client);
     }
@@ -50,23 +39,10 @@ public class ClientService : IClientService
 
         if (client is null)
         {
-            throw new ClientNotFoundException($"Client with name = {name} and surname = {surname} not found!");
+            throw new ClientNotFoundException($"Client with name = {name} and surname = {surname} was not found!");
         }
 
-        // todo: automapper or converter?
-        return new ClientDto()
-        {
-            Address = new AddressDto()
-            {
-                City = client.Address.City,
-                Country = client.Address.Country,
-                Street = client.Address.Street,
-            },
-            Birthday = client.Birthday,
-            Gender = client.Gender,
-            Name = client.Name,
-            Surname = client.Surname,
-        };
+        return _mapper.Map<ClientDto>(client);
     }
 
     public async Task<IEnumerable<ClientDto>> GetAllAsync(int? limit, int? offset)
@@ -75,17 +51,13 @@ public class ClientService : IClientService
         throw new NotImplementedException();
     }
 
-    public async Task UpdateAddressAsync(Guid id, AddressDto newAddress)
+    public async Task UpdateAddressAsync(Guid id, AddressDto newAddressDto)
     {
         var client = await _clientRepository.GetAsync(id);
 
-        // todo: automapper or converter?
-        await _addressRepository.UpdateAsync(new Address()
-        {
-            Id = client.Address.Id,
-            City = newAddress.City,
-            Country = newAddress.Country,
-            Street = newAddress.Street,
-        });
+        var newAddress = _mapper.Map<Address>(newAddressDto);
+        newAddress.Id = client.Address.Id;
+
+        await _addressRepository.UpdateAsync(newAddress);
     }
 }
