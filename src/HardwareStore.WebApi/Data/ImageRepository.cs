@@ -30,7 +30,7 @@ public class ImageRepository : IImageRepository
 
         if (image is null)
         {
-            throw new Exception($"Image with id = {id} not found!");
+            throw new ImageNotFoundException($"Image with id = {id} not found!");
         }
 
         return image;
@@ -40,6 +40,7 @@ public class ImageRepository : IImageRepository
     {
         var image = await GetAsync(item.Id);
 
+        // todo: remake?
         image.Content = item.Content;
         
         await _context.SaveChangesAsync();

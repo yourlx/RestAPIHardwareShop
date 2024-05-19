@@ -30,7 +30,7 @@ public class AddressRepository : IAddressRepository
 
         if (address is null)
         {
-            throw new Exception($"Address with id = {id} not found!");
+            throw new AddressNotFoundException($"Address with id = {id} not found!");
         }
 
         return address;
@@ -40,6 +40,7 @@ public class AddressRepository : IAddressRepository
     {
         var address = await GetAsync(item.Id);
 
+        // todo: remake?
         address.City = item.City;
         address.Country = item.Country;
         address.Street = item.Street;

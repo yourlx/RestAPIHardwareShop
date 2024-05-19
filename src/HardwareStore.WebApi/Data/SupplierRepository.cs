@@ -30,7 +30,7 @@ public class SupplierRepository : ISupplierRepository
 
         if (supplier is null)
         {
-            throw new Exception($"Supplier with id = {id} not found!");
+            throw new SupplierNotFoundException($"Supplier with id = {id} not found!");
         }
 
         return supplier;
@@ -40,6 +40,7 @@ public class SupplierRepository : ISupplierRepository
     {
         var supplier = await GetAsync(item.Id);
 
+        // todo: remake?
         supplier.Name = item.Name;
         supplier.Address = item.Address;
         supplier.PhoneNumber = item.PhoneNumber;

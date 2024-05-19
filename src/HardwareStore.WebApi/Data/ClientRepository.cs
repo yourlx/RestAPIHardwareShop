@@ -40,6 +40,7 @@ public class ClientRepository : IClientRepository
     {
         var client = await GetAsync(item.Id);
 
+        // todo: remake?
         client.Birthday = item.Birthday;
         client.Gender = item.Gender;
         client.Name = item.Name;

@@ -30,7 +30,7 @@ public class ProductRepository : IProductRepository
 
         if (product is null)
         {
-            throw new Exception($"Product with id = {id} not found!");
+            throw new ProductNotFoundException($"Product with id = {id} not found!");
         }
 
         return product;
@@ -40,6 +40,7 @@ public class ProductRepository : IProductRepository
     {
         var product = await GetAsync(item.Id);
 
+        // todo: remake?
         product.Available = item.Available;
         product.Category = item.Category;
         product.Image = item.Image;
