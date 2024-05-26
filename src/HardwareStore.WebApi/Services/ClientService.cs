@@ -18,13 +18,16 @@ public class ClientService : IClientService
         _addressRepository = addressRepository;
     }
 
-    public async Task CreateAsync(ClientDto clientDto)
+    public async Task<Guid> CreateAsync(ClientDto clientDto)
     {
         var client = _mapper.Map<Client>(clientDto);
+
         client.Id = new Guid();
         client.RegistrationDate = DateTime.UtcNow;
 
         await _clientRepository.AddAsync(client);
+
+        return client.Id;
     }
 
     public async Task DeleteAsync(Guid id)
@@ -34,6 +37,8 @@ public class ClientService : IClientService
 
     public async Task<ClientDto> GetByFullNameAsync(string name, string surname)
     {
+        // what is better way to do it:
+        // like this or add another method to repository? 
         var clients = await _clientRepository.GetAsync();
         var client = clients.FirstOrDefault(x => x.Name == name && x.Surname == surname);
 

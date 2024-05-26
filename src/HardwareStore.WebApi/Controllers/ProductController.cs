@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using HardwareStore.WebApi.Data;
+using HardwareStore.WebApi.DTO;
+using HardwareStore.WebApi.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HardwareStore.WebApi.Controllers;
 
@@ -6,41 +9,122 @@ namespace HardwareStore.WebApi.Controllers;
 [Route("api/v1/products")]
 public class ProductController : ControllerBase
 {
-    public ProductController()
+    private readonly IProductService _productService;
+
+    public ProductController(IProductService productService)
     {
+        _productService = productService;
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateAsync()
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Guid))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> CreateAsync([FromBody] ProductRequestDto productDto)
     {
-        // input: json of product
-        return Ok();
+        try
+        {
+            var id = await _productService.CreateAsync(productDto);
+
+            return Ok(id);
+        }
+        catch (SupplierNotFoundException exception)
+        {
+            return NotFound(exception.Message);
+        }
+        catch (Exception exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error");
+        }
     }
 
-    [HttpPatch]
-    public async Task<IActionResult> UpdateQuantityAsync()
+    [HttpPatch("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> UpdateQuantityAsync([FromRoute] Guid id, [FromQuery] int reduceQuantity)
     {
-        // input: id, quantity (reduce amount, NOT after reduce)
-        return Ok();
+        try
+        {
+            await _productService.UpdateQuantityAsync(id, reduceQuantity);
+
+            return Ok();
+        }
+        catch (ProductNotFoundException exception)
+        {
+            return NotFound(exception.Message);
+        }
+        catch (ProductNotEnoughException exception)
+        {
+            return Conflict(exception.Message);
+        }
+        catch (Exception exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error");
+        }
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetByIdAsync(Guid id)
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductResponseDto))]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetAsync(Guid id)
     {
-        // input: id
-        return Ok();
+        try
+        {
+            var result = await _productService.GetAsync(id);
+            
+            return Ok(result);
+        }
+        catch (ProductNotFoundException exception)
+        {
+            return NotFound(exception.Message);
+        }
+        catch (Exception exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error");
+        }
     }
 
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ProductResponseDto>))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAllAsync()
     {
-        return Ok();
+        try
+        {
+            var result = await _productService.GetAllAsync();
+            
+            return Ok(result);
+        }
+        catch (Exception exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error");
+        }
     }
 
     [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> DeleteAsync(Guid id)
     {
-        // input: id
-        return Ok();
+        try
+        {
+            await _productService.DeleteAsync(id);
+            
+            return Ok();
+        }
+        catch (ProductNotFoundException exception)
+        {
+            return NotFound(exception.Message);
+        }
+        catch (Exception exception)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error");
+        }
     }
 }

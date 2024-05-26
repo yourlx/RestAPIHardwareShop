@@ -42,7 +42,7 @@ public class ImageRepository : IImageRepository
 
         // todo: remake?
         image.Content = item.Content;
-        
+
         await _context.SaveChangesAsync();
     }
 
@@ -51,6 +51,7 @@ public class ImageRepository : IImageRepository
         var image = await GetAsync(id);
 
         _context.Images.Remove(image);
+
         await _context.SaveChangesAsync();
     }
 }

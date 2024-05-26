@@ -12,21 +12,23 @@ public class SupplierRepository : ISupplierRepository
     {
         _context = context;
     }
-    
+
     public async Task AddAsync(Supplier item)
     {
+        // todo: add check for phone number?
+
         await _context.Suppliers.AddAsync(item);
         await _context.SaveChangesAsync();
     }
 
     public async Task<IEnumerable<Supplier>> GetAsync()
     {
-        return await _context.Suppliers.ToListAsync();
+        return await _context.Suppliers.Include(x => x.Address).ToListAsync();
     }
 
     public async Task<Supplier> GetAsync(Guid id)
     {
-        var supplier = await _context.Suppliers.FirstOrDefaultAsync(x => x.Id == id);
+        var supplier = await _context.Suppliers.Include(x => x.Address).FirstOrDefaultAsync(x => x.Id == id);
 
         if (supplier is null)
         {

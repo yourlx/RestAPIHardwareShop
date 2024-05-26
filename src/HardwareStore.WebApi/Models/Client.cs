@@ -8,7 +8,7 @@ public class Client
 
     public string Surname { get; set; }
 
-    public DateTime Birthday { get; set; }
+    public DateOnly Birthday { get; set; }
 
     public string Gender { get; set; } // todo: enum?
 

@@ -1,9 +1,9 @@
-﻿namespace HardwareStore.WebApi.Models;
+﻿using HardwareStore.WebApi.Models;
 
-public class Product
+namespace HardwareStore.WebApi.DTO;
+
+public class ProductResponseDto
 {
-    public Guid Id { get; set; }
-
     public string Name { get; set; }
 
     public string Category { get; set; }
@@ -16,5 +16,5 @@ public class Product
 
     public Supplier Supplier { get; set; }
 
-    public Image? Image { get; set; }
+    public ImageDto? Image { get; set; }
 }

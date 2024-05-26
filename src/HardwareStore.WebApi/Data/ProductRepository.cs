@@ -12,7 +12,7 @@ public class ProductRepository : IProductRepository
     {
         _context = context;
     }
-    
+
     public async Task AddAsync(Product item)
     {
         await _context.Products.AddAsync(item);
@@ -21,12 +21,16 @@ public class ProductRepository : IProductRepository
 
     public async Task<IEnumerable<Product>> GetAsync()
     {
-        return await _context.Products.ToListAsync();
+        return await _context.Products.Include(x => x.Image)
+            .Include(x => x.Supplier)
+            .ToListAsync();
     }
 
     public async Task<Product> GetAsync(Guid id)
     {
-        var product = await _context.Products.FirstOrDefaultAsync(x => x.Id == id);
+        var product = await _context.Products.Include(x => x.Image)
+            .Include(x => x.Supplier)
+            .FirstOrDefaultAsync(x => x.Id == id);
 
         if (product is null)
         {
@@ -41,7 +45,7 @@ public class ProductRepository : IProductRepository
         var product = await GetAsync(item.Id);
 
         // todo: remake?
-        product.Available = item.Available;
+        product.AvailableStock = item.AvailableStock;
         product.Category = item.Category;
         product.Image = item.Image;
         product.Name = item.Name;

@@ -17,6 +17,9 @@ builder.Services.AddScoped<ISupplierRepository, SupplierRepository>();
 builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddScoped<IClientService, ClientService>();
+builder.Services.AddScoped<IImageService, ImageService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ISupplierService, SupplierService>();
 
 builder.Services.AddControllers();
 

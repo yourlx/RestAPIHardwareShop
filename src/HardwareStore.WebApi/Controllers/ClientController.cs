@@ -17,13 +17,16 @@ public class ClientController : ControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Guid))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CreateAsync([FromBody] ClientDto client)
     {
         try
         {
-            await _clientService.CreateAsync(client);
+            var id = await _clientService.CreateAsync(client);
             
-            return Ok();
+            return Ok(id);
         }
         catch (Exception exception)
         {
@@ -32,6 +35,9 @@ public class ClientController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> DeleteAsync([FromRoute] Guid id)
     {
         try
@@ -42,7 +48,7 @@ public class ClientController : ControllerBase
         }
         catch (ClientNotFoundException exception)
         {
-            return BadRequest(exception.Message);
+            return NotFound(exception.Message);
         }
         catch (Exception exception)
         {
@@ -50,8 +56,12 @@ public class ClientController : ControllerBase
         }
     }
 
-    [HttpGet("{name}/{surname}")]
-    public async Task<IActionResult> GetByFullNameAsync([FromRoute] string name, [FromRoute] string surname)
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetByFullNameAsync([FromQuery] string name, [FromQuery] string surname)
     {
         try
         {
@@ -61,7 +71,7 @@ public class ClientController : ControllerBase
         }
         catch (ClientNotFoundException exception)
         {
-            return BadRequest(exception.Message);
+            return NotFound(exception.Message);
         }
         catch (Exception exception)
         {
@@ -70,6 +80,8 @@ public class ClientController : ControllerBase
     }
 
     [HttpGet("all")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ClientDto>))]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAllAsync([FromQuery] int? limit, [FromQuery] int? offset)
     {
         try
@@ -85,6 +97,10 @@ public class ClientController : ControllerBase
     }
 
     [HttpPatch("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateAddressAsync([FromRoute] Guid id, [FromBody] AddressDto newAddress)
     {
         try
@@ -95,7 +111,7 @@ public class ClientController : ControllerBase
         }
         catch (ClientNotFoundException exception)
         {
-            return BadRequest(exception.Message);
+            return NotFound(exception.Message);
         }
         catch (Exception exception)
         {
