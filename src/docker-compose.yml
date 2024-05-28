@@ -1,0 +1,30 @@
+﻿services:
+  hardwarestore.webapi:
+    depends_on:
+      - hardwarestore.database
+    image: hardwarestore.api
+    container_name: hardwarestore.api
+    build:
+      context: .
+      dockerfile: HardwareStore.WebApi/Dockerfile
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT:-Production}
+      - ConnectionStrings__DbConnectionString=Host=hardwarestore.database;Port=5432;User ID=postgres;Password=postgres;Database=postgres
+        
+  hardwarestore.database:
+    image: postgres:15
+    container_name: hardwarestore.database
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - hardwarestore-data:/var/lib/postgresql/data
+    ports:
+      - "9988:5432"
+
+volumes:
+  hardwarestore-data:
