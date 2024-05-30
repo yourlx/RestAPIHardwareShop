@@ -1,8 +1,17 @@
 # Rest API Hardware Shop
 
-This is a learning project to get acquainted with API development using ASP.NET.
+This is a sample project designed to learn how to build and work with RESTful APIs using ASP.NET.
 
-# Installation and running
+# Table of Contents
+
+- [Installation and Running](#installation-and-running)
+   - [Local](#local)
+   - [Docker](#docker)
+- [Usage](#usage)
+- [API Endpoints](#api-endpoints)
+- [License](#license)
+
+# Installation and Running
 
 1. Clone the repository with the application:
 
@@ -10,7 +19,7 @@ This is a learning project to get acquainted with API development using ASP.NET.
 git clone https://github.com/yourlx/Backend.Project_2.git
 ```
 
-2. Navigate to `src` folder
+2. Navigate to the `src` folder:
 
 ```
 cd src
@@ -18,35 +27,60 @@ cd src
 
 ## Local
 
-1. Make sure that you have .NET 8 SDK and runtime installed.\
-   Also, make sure that you have a PostgreSQL instance (local or in Docker container) running on the same port defined
+1. Make sure that you have .NET 8 SDK and runtime installed. Also, ensure that you have a PostgreSQL instance (local or
+   in a Docker container) running on the same port defined
    in [appsettings.json](src/HardwareStore.WebApi/appsettings.json), or change it to your preferred port.
 
-2. Run application
+2. Run the application:
 
 ```
 dotnet run --project HardwareStore.WebApi
 ```
 
-3. Make sure that application is running
+3. Verify that the application is running.
 
 ## Docker
 
 1. Make sure that you have Docker (and Docker Compose) installed.
 
-2. Build Docker image and run containers using Docker Compose
+2. Build the Docker image and run the containers using Docker Compose:
 
 ```
 ASPNETCORE_ENVIRONMENT=Development docker-compose up
 ```
 
-3. Make sure that containers are running using `docker ps` command or Docker Desktop
+3. Ensure that the containers are running using the `docker ps` command or Docker Desktop.
 
-# Check your application
+# Usage
 
-In both ways (local and Docker) you will get the same result. \
-Swagger documentation should be available on http://localhost:8080/swagger/index.html
+To interact with the API, you can use tools like `curl`, Postman, or the built-in Swagger UI. The Swagger documentation
+should be available at http://localhost:8080/swagger/index.html.
 
-# Licence
+Example:
+
+- Get all products:
+
+```
+GET /api/v1/products
+```
+
+- Create a new product:
+
+```
+POST /api/v1/products
+{
+  "name": "Wooden Chair",
+  "category": "Furniture",
+  "price": 15,
+  "availableStock": 100,
+  "supplierId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+}
+```
+
+# API Endpoints
+
+todo
+
+# License
 
 This repository code is under MIT License. See [LICENSE file](LICENSE) for more info.
