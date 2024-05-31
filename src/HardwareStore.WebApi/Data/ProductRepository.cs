@@ -23,6 +23,7 @@ public class ProductRepository : IProductRepository
     {
         return await _context.Products.Include(x => x.Image)
             .Include(x => x.Supplier)
+            .ThenInclude(x => x.Address)
             .ToListAsync();
     }
 
@@ -30,6 +31,7 @@ public class ProductRepository : IProductRepository
     {
         var product = await _context.Products.Include(x => x.Image)
             .Include(x => x.Supplier)
+            .ThenInclude(x => x.Address)
             .FirstOrDefaultAsync(x => x.Id == id);
 
         if (product is null)

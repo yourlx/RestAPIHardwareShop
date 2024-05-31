@@ -15,13 +15,13 @@ This is a sample project designed to learn how to build and work with RESTful AP
 
 1. Clone the repository with the application:
 
-```
+```bash
 git clone https://github.com/yourlx/Backend.Project_2.git
 ```
 
 2. Navigate to the `src` folder:
 
-```
+```bash
 cd src
 ```
 
@@ -33,7 +33,7 @@ cd src
 
 2. Run the application:
 
-```
+```bash
 dotnet run --project HardwareStore.WebApi
 ```
 
@@ -45,7 +45,7 @@ dotnet run --project HardwareStore.WebApi
 
 2. Build the Docker image and run the containers using Docker Compose:
 
-```
+```bash
 ASPNETCORE_ENVIRONMENT=Development docker-compose up
 ```
 
@@ -60,13 +60,13 @@ Example:
 
 - Get all products:
 
-```
+```http request
 GET /api/v1/products
 ```
 
 - Create a new product:
 
-```
+```http request
 POST /api/v1/products
 {
   "name": "Wooden Chair",
