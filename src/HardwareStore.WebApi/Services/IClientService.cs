@@ -4,7 +4,7 @@ namespace HardwareStore.WebApi.Services;
 
 public interface IClientService
 {
-    Task<Guid> CreateAsync(ClientDto clientDto);
+    Task<ClientDto> CreateAsync(CreateClientDto clientDto);
     
     Task DeleteAsync(Guid id);
     

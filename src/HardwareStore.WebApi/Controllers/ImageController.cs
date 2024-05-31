@@ -19,7 +19,7 @@ public class ImageController : ControllerBase
     }
 
     [HttpPost]
-    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Guid))]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ImageDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -28,9 +28,9 @@ public class ImageController : ControllerBase
     {
         try
         {
-            var id = await _imageService.CreateAsync(productId, imageDto.Content);
+            var result = await _imageService.CreateAsync(productId, imageDto.Content);
 
-            return Ok(id);
+            return Ok(result);
         }
         catch (ProductNotFoundException exception)
         {
@@ -46,7 +46,7 @@ public class ImageController : ControllerBase
         }
     }
 
-    [HttpPatch("{id}")]
+    [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -125,12 +125,10 @@ public class ImageController : ControllerBase
     {
         try
         {
+            // todo:
             var image = await _imageService.GetAsync(id);
-
-            var file = new FileContentResult(image, "application/octet-stream");
-            file.FileDownloadName = "test.png";
             
-            return Ok(file);
+            return Ok();
         }
         catch (ImageNotFoundException exception)
         {

@@ -4,7 +4,7 @@ namespace HardwareStore.WebApi.Services;
 
 public interface ISupplierService
 {
-    Task<Guid> CreateAsync(SupplierDto supplierDto);
+    Task<SupplierDto> CreateAsync(CreateSupplierDto supplierDto);
 
     Task UpdateAddressAsync(Guid id, AddressDto newAddressDto);
 

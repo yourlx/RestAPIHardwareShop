@@ -17,16 +17,16 @@ public class ClientController : ControllerBase
     }
 
     [HttpPost]
-    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Guid))]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ClientDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> CreateAsync([FromBody] ClientDto client)
+    public async Task<IActionResult> CreateAsync([FromBody] CreateClientDto client)
     {
         try
         {
-            var id = await _clientService.CreateAsync(client);
+            var result = await _clientService.CreateAsync(client);
             
-            return Ok(id);
+            return Ok(result);
         }
         catch (Exception exception)
         {
@@ -96,7 +96,7 @@ public class ClientController : ControllerBase
         }
     }
 
-    [HttpPatch("{id}")]
+    [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

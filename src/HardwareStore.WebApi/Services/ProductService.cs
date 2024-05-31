@@ -18,7 +18,7 @@ public class ProductService : IProductService
         _supplierRepository = supplierRepository;
     }
 
-    public async Task<Guid> CreateAsync(ProductRequestDto productDto)
+    public async Task<ProductDto> CreateAsync(CreateProductDto productDto)
     {
         var supplier = await _supplierRepository.GetAsync(productDto.SupplierId);
 
@@ -30,7 +30,7 @@ public class ProductService : IProductService
 
         await _productRepository.AddAsync(product);
 
-        return product.Id;
+        return _mapper.Map<ProductDto>(product);
     }
 
     public async Task UpdateQuantityAsync(Guid id, int reduceQuantity)
@@ -48,18 +48,18 @@ public class ProductService : IProductService
         await _productRepository.UpdateAsync(product);
     }
 
-    public async Task<ProductResponseDto> GetAsync(Guid id)
+    public async Task<ProductDto> GetAsync(Guid id)
     {
         var product = await _productRepository.GetAsync(id);
-
-        return _mapper.Map<ProductResponseDto>(product);
+        
+        return _mapper.Map<ProductDto>(product);
     }
 
-    public async Task<IEnumerable<ProductResponseDto>> GetAllAsync()
+    public async Task<IEnumerable<ProductDto>> GetAllAsync()
     {
         var products = await _productRepository.GetAsync();
 
-        var productsDto = products.Select(x => _mapper.Map<ProductResponseDto>(x));
+        var productsDto = products.Select(x => _mapper.Map<ProductDto>(x));
 
         return productsDto;
     }

@@ -4,13 +4,13 @@ namespace HardwareStore.WebApi.Services;
 
 public interface IProductService
 {
-    Task<Guid> CreateAsync(ProductRequestDto productDto);
+    Task<ProductDto> CreateAsync(CreateProductDto productDto);
 
     Task UpdateQuantityAsync(Guid id, int reduceQuantity);
 
-    Task<ProductResponseDto> GetAsync(Guid id);
+    Task<ProductDto> GetAsync(Guid id);
 
-    Task<IEnumerable<ProductResponseDto>> GetAllAsync();
+    Task<IEnumerable<ProductDto>> GetAllAsync();
 
     Task DeleteAsync(Guid id);
 }

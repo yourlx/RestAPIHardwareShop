@@ -21,13 +21,13 @@ public class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> CreateAsync([FromBody] ProductRequestDto productDto)
+    public async Task<IActionResult> CreateAsync([FromBody] CreateProductDto productDto)
     {
         try
         {
-            var id = await _productService.CreateAsync(productDto);
+            var result = await _productService.CreateAsync(productDto);
 
-            return Ok(id);
+            return Ok(result);
         }
         catch (SupplierNotFoundException exception)
         {
@@ -39,7 +39,7 @@ public class ProductController : ControllerBase
         }
     }
 
-    [HttpPatch("{id}")]
+    [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -68,7 +68,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductResponseDto))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDto))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAsync(Guid id)
@@ -90,7 +90,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ProductResponseDto>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ProductDto>))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAllAsync()
     {

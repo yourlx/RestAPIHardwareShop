@@ -18,7 +18,7 @@ public class ClientService : IClientService
         _addressRepository = addressRepository;
     }
 
-    public async Task<Guid> CreateAsync(ClientDto clientDto)
+    public async Task<ClientDto> CreateAsync(CreateClientDto clientDto)
     {
         var client = _mapper.Map<Client>(clientDto);
 
@@ -27,18 +27,20 @@ public class ClientService : IClientService
 
         await _clientRepository.AddAsync(client);
 
-        return client.Id;
+        return _mapper.Map<ClientDto>(client);
     }
 
     public async Task DeleteAsync(Guid id)
     {
+        var client = await _clientRepository.GetAsync(id);
+
+        await _addressRepository.DeleteAsync(client.Address.Id);
+        
         await _clientRepository.DeleteAsync(id);
     }
 
     public async Task<ClientDto> GetByFullNameAsync(string name, string surname)
     {
-        // what is better way to do it:
-        // like this or add another method to repository? 
         var clients = await _clientRepository.GetAsync();
         var client = clients.FirstOrDefault(x => x.Name == name && x.Surname == surname);
 

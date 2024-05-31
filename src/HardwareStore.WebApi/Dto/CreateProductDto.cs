@@ -1,6 +1,6 @@
 ﻿namespace HardwareStore.WebApi.DTO;
 
-public class ProductRequestDto
+public class CreateProductDto
 {
     public string Name { get; set; }
 

@@ -18,7 +18,7 @@ public class SupplierService : ISupplierService
         _addressRepository = addressRepository;
     }
 
-    public async Task<Guid> CreateAsync(SupplierDto supplierDto)
+    public async Task<SupplierDto> CreateAsync(CreateSupplierDto supplierDto)
     {
         var supplier = _mapper.Map<Supplier>(supplierDto);
 
@@ -26,7 +26,7 @@ public class SupplierService : ISupplierService
 
         await _supplierRepository.AddAsync(supplier);
 
-        return supplier.Id;
+        return _mapper.Map<SupplierDto>(supplier);
     }
 
     public async Task UpdateAddressAsync(Guid id, AddressDto newAddressDto)
@@ -41,6 +41,10 @@ public class SupplierService : ISupplierService
 
     public async Task DeleteAsync(Guid id)
     {
+        var supplier = await _supplierRepository.GetAsync(id);
+
+        await _addressRepository.DeleteAsync(supplier.Address.Id);
+        
         await _supplierRepository.DeleteAsync(id);
     }
 

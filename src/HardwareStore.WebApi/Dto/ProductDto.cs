@@ -1,9 +1,9 @@
-﻿using HardwareStore.WebApi.Models;
+﻿namespace HardwareStore.WebApi.DTO;
 
-namespace HardwareStore.WebApi.DTO;
-
-public class ProductResponseDto
+public class ProductDto
 {
+    public Guid Id { get; set; }
+
     public string Name { get; set; }
 
     public string Category { get; set; }
@@ -14,7 +14,7 @@ public class ProductResponseDto
 
     public DateTime LastUpdate { get; set; }
 
-    public Supplier Supplier { get; set; }
+    public SupplierDto Supplier { get; set; }
 
     public ImageDto? Image { get; set; }
 }

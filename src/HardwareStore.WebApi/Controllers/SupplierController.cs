@@ -20,13 +20,13 @@ public class SupplierController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Guid))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> CreateAsync([FromBody] SupplierDto supplierDto)
+    public async Task<IActionResult> CreateAsync([FromBody] CreateSupplierDto supplierDto)
     {
         try
         {
-            var id = await _supplierService.CreateAsync(supplierDto);
+            var result = await _supplierService.CreateAsync(supplierDto);
             
-            return Ok(id);
+            return Ok(result);
         }
         catch (Exception exception)
         {
@@ -34,7 +34,7 @@ public class SupplierController : ControllerBase
         }
     }
 
-    [HttpPatch("{id}")]
+    [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
