@@ -10,12 +10,15 @@ public class ProductService : IProductService
     private readonly IMapper _mapper;
     private readonly IProductRepository _productRepository;
     private readonly ISupplierRepository _supplierRepository;
+    private readonly ImageRepository _imageRepository;
 
-    public ProductService(IMapper mapper, IProductRepository productRepository, ISupplierRepository supplierRepository)
+    public ProductService(IMapper mapper, IProductRepository productRepository, ISupplierRepository supplierRepository,
+        ImageRepository imageRepository)
     {
         _mapper = mapper;
         _productRepository = productRepository;
         _supplierRepository = supplierRepository;
+        _imageRepository = imageRepository;
     }
 
     public async Task<ProductDto> CreateAsync(CreateProductDto productDto)
@@ -51,7 +54,7 @@ public class ProductService : IProductService
     public async Task<ProductDto> GetAsync(Guid id)
     {
         var product = await _productRepository.GetAsync(id);
-        
+
         return _mapper.Map<ProductDto>(product);
     }
 
@@ -66,6 +69,13 @@ public class ProductService : IProductService
 
     public async Task DeleteAsync(Guid id)
     {
+        var product = await _productRepository.GetAsync(id);
+
+        if (product.Image is not null)
+        {
+            await _imageRepository.DeleteAsync(product.Image.Id);
+        }
+
         await _productRepository.DeleteAsync(id);
     }
 }
