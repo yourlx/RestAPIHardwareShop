@@ -10,10 +10,10 @@ public class ProductService : IProductService
     private readonly IMapper _mapper;
     private readonly IProductRepository _productRepository;
     private readonly ISupplierRepository _supplierRepository;
-    private readonly ImageRepository _imageRepository;
+    private readonly IImageRepository _imageRepository;
 
     public ProductService(IMapper mapper, IProductRepository productRepository, ISupplierRepository supplierRepository,
-        ImageRepository imageRepository)
+        IImageRepository imageRepository)
     {
         _mapper = mapper;
         _productRepository = productRepository;
