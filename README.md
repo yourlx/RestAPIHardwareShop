@@ -8,7 +8,6 @@ This is a sample project designed to learn how to build and work with RESTful AP
    - [Local](#local)
    - [Docker](#docker)
 - [Usage](#usage)
-- [API Endpoints](#api-endpoints)
 - [License](#license)
 
 # Installation and Running
@@ -16,7 +15,7 @@ This is a sample project designed to learn how to build and work with RESTful AP
 1. Clone the repository with the application:
 
 ```bash
-git clone https://github.com/yourlx/Backend.Project_2.git
+git clone https://github.com/yourlx/RestAPIHardwareShop
 ```
 
 2. Navigate to the `src` folder:
@@ -76,10 +75,6 @@ POST /api/v1/products
   "supplierId": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
 }
 ```
-
-# API Endpoints
-
-todo
 
 # License
 
