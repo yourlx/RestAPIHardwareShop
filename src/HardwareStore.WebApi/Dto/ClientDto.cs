@@ -10,9 +10,9 @@ public class ClientDto
 
     public DateOnly Birthday { get; set; }
 
-    public string Gender { get; set; } // todo: enum?
+    public string Gender { get; set; }
     
-    // public DateTime RegistrationDate { get; set; } // todo: uncomment or delete?
+    // public DateTime RegistrationDate { get; set; } // uncomment or delete?
 
     public AddressDto Address { get; set; }
 }

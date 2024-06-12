@@ -10,7 +10,7 @@ public class Client
 
     public DateOnly Birthday { get; set; }
 
-    public string Gender { get; set; } // todo: enum?
+    public string Gender { get; set; }
 
     public DateTime RegistrationDate { get; set; }
 

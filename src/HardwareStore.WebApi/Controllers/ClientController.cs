@@ -7,26 +7,19 @@ namespace HardwareStore.WebApi.Controllers;
 
 [ApiController]
 [Route("api/v1/clients")]
-public class ClientController : ControllerBase
+public class ClientController(IClientService clientService) : ControllerBase
 {
-    private readonly IClientService _clientService;
-    
-    public ClientController(IClientService clientService)
-    {
-        _clientService = clientService;
-    }
-
-    [HttpPost]
+    [HttpPost("")]
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ClientDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> CreateAsync([FromBody] CreateClientDto client)
+    public async Task<IActionResult> CreateAsync([FromBody] CreateClientDto createClientDto)
     {
         try
         {
-            var result = await _clientService.CreateAsync(client);
-            
-            return Ok(result);
+            var clientDto = await clientService.CreateAsync(createClientDto);
+
+            return Ok(clientDto);
         }
         catch (Exception exception)
         {
@@ -34,7 +27,7 @@ public class ClientController : ControllerBase
         }
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -42,7 +35,7 @@ public class ClientController : ControllerBase
     {
         try
         {
-            await _clientService.DeleteAsync(id);
+            await clientService.DeleteAsync(id);
 
             return Ok();
         }
@@ -56,7 +49,7 @@ public class ClientController : ControllerBase
         }
     }
 
-    [HttpGet]
+    [HttpGet("search")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -65,9 +58,9 @@ public class ClientController : ControllerBase
     {
         try
         {
-            var result = await _clientService.GetByFullNameAsync(name, surname);
-            
-            return Ok(result);
+            var clientDto = await clientService.GetByFullNameAsync(name, surname);
+
+            return Ok(clientDto);
         }
         catch (ClientNotFoundException exception)
         {
@@ -86,9 +79,9 @@ public class ClientController : ControllerBase
     {
         try
         {
-            var result = await _clientService.GetAllAsync(limit, offset);
-            
-            return Ok(result);
+            var clientDtos = await clientService.GetAllAsync(limit, offset);
+
+            return Ok(clientDtos);
         }
         catch (Exception exception)
         {
@@ -96,17 +89,17 @@ public class ClientController : ControllerBase
         }
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UpdateAddressAsync([FromRoute] Guid id, [FromBody] AddressDto newAddress)
+    public async Task<IActionResult> UpdateAddressAsync([FromRoute] Guid id, [FromBody] AddressDto addressDto)
     {
         try
         {
-            await _clientService.UpdateAddressAsync(id, newAddress);
-            
+            await clientService.UpdateAddressAsync(id, addressDto);
+
             return Ok();
         }
         catch (ClientNotFoundException exception)

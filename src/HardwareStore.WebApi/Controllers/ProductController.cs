@@ -7,27 +7,20 @@ namespace HardwareStore.WebApi.Controllers;
 
 [ApiController]
 [Route("api/v1/products")]
-public class ProductController : ControllerBase
+public class ProductController(IProductService productService) : ControllerBase
 {
-    private readonly IProductService _productService;
-
-    public ProductController(IProductService productService)
-    {
-        _productService = productService;
-    }
-
-    [HttpPost]
-    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Guid))]
+    [HttpPost("")]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ProductDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> CreateAsync([FromBody] CreateProductDto productDto)
+    public async Task<IActionResult> CreateAsync([FromBody] CreateProductDto createProductDto)
     {
         try
         {
-            var result = await _productService.CreateAsync(productDto);
+            var productDto = await productService.CreateAsync(createProductDto);
 
-            return Ok(result);
+            return Ok(productDto);
         }
         catch (SupplierNotFoundException exception)
         {
@@ -39,7 +32,7 @@ public class ProductController : ControllerBase
         }
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -49,7 +42,7 @@ public class ProductController : ControllerBase
     {
         try
         {
-            await _productService.UpdateQuantityAsync(id, reduceQuantity);
+            await productService.UpdateQuantityAsync(id, reduceQuantity);
 
             return Ok();
         }
@@ -67,7 +60,7 @@ public class ProductController : ControllerBase
         }
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDto))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -75,9 +68,9 @@ public class ProductController : ControllerBase
     {
         try
         {
-            var result = await _productService.GetAsync(id);
-            
-            return Ok(result);
+            var productDto = await productService.GetAsync(id);
+
+            return Ok(productDto);
         }
         catch (ProductNotFoundException exception)
         {
@@ -89,16 +82,16 @@ public class ProductController : ControllerBase
         }
     }
 
-    [HttpGet]
+    [HttpGet("")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ProductDto>))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAllAsync()
     {
         try
         {
-            var result = await _productService.GetAllAsync();
-            
-            return Ok(result);
+            var productDtos = await productService.GetAllAsync();
+
+            return Ok(productDtos);
         }
         catch (Exception exception)
         {
@@ -106,7 +99,7 @@ public class ProductController : ControllerBase
         }
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -114,8 +107,8 @@ public class ProductController : ControllerBase
     {
         try
         {
-            await _productService.DeleteAsync(id);
-            
+            await productService.DeleteAsync(id);
+
             return Ok();
         }
         catch (ProductNotFoundException exception)

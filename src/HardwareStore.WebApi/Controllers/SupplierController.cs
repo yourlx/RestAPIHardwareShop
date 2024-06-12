@@ -7,26 +7,19 @@ namespace HardwareStore.WebApi.Controllers;
 
 [ApiController]
 [Route("api/v1/suppliers")]
-public class SupplierController : ControllerBase
+public class SupplierController(ISupplierService supplierService) : ControllerBase
 {
-    private readonly ISupplierService _supplierService;
-
-    public SupplierController(ISupplierService supplierService)
-    {
-        _supplierService = supplierService;
-    }
-
-    [HttpPost]
-    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Guid))]
+    [HttpPost("")]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(SupplierDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> CreateAsync([FromBody] CreateSupplierDto supplierDto)
+    public async Task<IActionResult> CreateAsync([FromBody] CreateSupplierDto createSupplierDto)
     {
         try
         {
-            var result = await _supplierService.CreateAsync(supplierDto);
-            
-            return Ok(result);
+            var supplierDto = await supplierService.CreateAsync(createSupplierDto);
+
+            return Ok(supplierDto);
         }
         catch (Exception exception)
         {
@@ -34,16 +27,16 @@ public class SupplierController : ControllerBase
         }
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UpdateAddressAsync([FromRoute] Guid id, [FromBody] AddressDto newAddressDto)
+    public async Task<IActionResult> UpdateAddressAsync([FromRoute] Guid id, [FromBody] AddressDto addressDto)
     {
         try
         {
-            await _supplierService.UpdateAddressAsync(id, newAddressDto);
+            await supplierService.UpdateAddressAsync(id, addressDto);
 
             return Ok();
         }
@@ -57,7 +50,7 @@ public class SupplierController : ControllerBase
         }
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -65,8 +58,8 @@ public class SupplierController : ControllerBase
     {
         try
         {
-            await _supplierService.DeleteAsync(id);
-            
+            await supplierService.DeleteAsync(id);
+
             return Ok();
         }
         catch (SupplierNotFoundException exception)
@@ -86,9 +79,9 @@ public class SupplierController : ControllerBase
     {
         try
         {
-            var result = await _supplierService.GetAllAsync();
-            
-            return Ok(result);
+            var supplierDtos = await supplierService.GetAllAsync();
+
+            return Ok(supplierDtos);
         }
         catch (Exception exception)
         {
@@ -96,7 +89,7 @@ public class SupplierController : ControllerBase
         }
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SupplierDto))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -104,9 +97,9 @@ public class SupplierController : ControllerBase
     {
         try
         {
-            var result = await _supplierService.GetAsync(id);
-            
-            return Ok(result);
+            var supplierDto = await supplierService.GetAsync(id);
+
+            return Ok(supplierDto);
         }
         catch (SupplierNotFoundException exception)
         {

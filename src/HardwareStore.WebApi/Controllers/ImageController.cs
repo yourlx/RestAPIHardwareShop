@@ -9,28 +9,21 @@ namespace HardwareStore.WebApi.Controllers;
 // 2) todo: not downloading image when requested ;( (by id, by product id)
 [ApiController]
 [Route("api/v1/images")]
-public class ImageController : ControllerBase
+public class ImageController(IImageService imageService) : ControllerBase
 {
-    private readonly IImageService _imageService;
-
-    public ImageController(IImageService imageService)
-    {
-        _imageService = imageService;
-    }
-
-    [HttpPost]
+    [HttpPost("")]
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ImageDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> CreateAsync([FromQuery] Guid productId, [FromBody] ImageDto imageDto)
+    public async Task<IActionResult> CreateAsync([FromQuery] Guid productId, [FromBody] byte[] content)
     {
         try
         {
-            var result = await _imageService.CreateAsync(productId, imageDto.Content);
+            var imageDto = await imageService.CreateAsync(productId, content);
 
-            return Ok(result);
+            return Ok(imageDto);
         }
         catch (ProductNotFoundException exception)
         {
@@ -46,16 +39,16 @@ public class ImageController : ControllerBase
         }
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] ImageDto imageDto)
+    public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] byte[] content)
     {
         try
         {
-            await _imageService.UpdateAsync(id, imageDto.Content);
+            await imageService.UpdateAsync(id, content);
 
             return Ok();
         }
@@ -69,7 +62,7 @@ public class ImageController : ControllerBase
         }
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -77,7 +70,7 @@ public class ImageController : ControllerBase
     {
         try
         {
-            await _imageService.DeleteAsync(id);
+            await imageService.DeleteAsync(id);
 
             return Ok();
         }
@@ -91,16 +84,15 @@ public class ImageController : ControllerBase
         }
     }
 
-    [HttpGet("byProductId/{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(byte[]))]
+    [HttpGet("byProduct/{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetByProductIdAsync([FromRoute] Guid id)
     {
         try
         {
-            await _imageService.GetByProductIdAsync(id);
-
+            // todo:
             return Ok();
         }
         catch (ImageNotFoundException exception)
@@ -117,8 +109,8 @@ public class ImageController : ControllerBase
         }
     }
 
-    [HttpGet("{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FileContentResult))]
+    [HttpGet("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAsync([FromRoute] Guid id)
@@ -126,8 +118,6 @@ public class ImageController : ControllerBase
         try
         {
             // todo:
-            var image = await _imageService.GetAsync(id);
-            
             return Ok();
         }
         catch (ImageNotFoundException exception)
