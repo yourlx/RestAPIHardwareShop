@@ -8,7 +8,7 @@ public interface IClientService
     
     Task DeleteAsync(Guid id);
     
-    Task<ClientDto> GetByFullNameAsync(string name, string surname);
+    Task<IEnumerable<ClientDto>> GetByFullNameAsync(string name, string surname);
     
     Task<IEnumerable<ClientDto>> GetAllAsync(int? limit, int? offset);
     

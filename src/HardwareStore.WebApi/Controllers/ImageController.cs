@@ -4,12 +4,23 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HardwareStore.WebApi.Controllers;
 
+/// <summary>
+/// Images API.
+/// </summary>
+/// <param name="imageService"></param>
 [ApiController]
 [Route("api/v1/images")]
+[Produces("application/json")]
 public class ImageController(IImageService imageService) : ControllerBase
 {
+    /// <summary>
+    /// Add image to existing product.
+    /// </summary>
+    /// <param name="productId">Product ID.</param>
+    /// <param name="image">Image content.</param>
+    /// <returns>Created image ID.</returns>
     [HttpPost("")]
-    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Guid))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Guid))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -40,6 +51,12 @@ public class ImageController(IImageService imageService) : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Update existing image content.
+    /// </summary>
+    /// <param name="id">Image ID.</param>
+    /// <param name="image">New image content.</param>
+    /// <returns></returns>
     [HttpPut("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -67,6 +84,12 @@ public class ImageController(IImageService imageService) : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Delete existing image.
+    /// Also removes image relation from product.
+    /// </summary>
+    /// <param name="id">Image ID.</param>
+    /// <returns></returns>
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -89,6 +112,11 @@ public class ImageController(IImageService imageService) : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Get image content by product ID.
+    /// </summary>
+    /// <param name="id">Product ID.</param>
+    /// <returns>Image content.</returns>
     [HttpGet("byProduct/{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FileContentResult))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -115,6 +143,11 @@ public class ImageController(IImageService imageService) : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Get image content by ID.
+    /// </summary>
+    /// <param name="id">Image ID.</param>
+    /// <returns>Image content.</returns>
     [HttpGet("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FileContentResult))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

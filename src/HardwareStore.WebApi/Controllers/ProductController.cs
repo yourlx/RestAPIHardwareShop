@@ -5,12 +5,22 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HardwareStore.WebApi.Controllers;
 
+/// <summary>
+/// Products API.
+/// </summary>
+/// <param name="productService"></param>
 [ApiController]
 [Route("api/v1/products")]
+[Produces("application/json")]
 public class ProductController(IProductService productService) : ControllerBase
 {
+    /// <summary>
+    /// Create a new product.
+    /// </summary>
+    /// <param name="createProductDto">Product data.</param>
+    /// <returns>The created product.</returns>
     [HttpPost("")]
-    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ProductDto))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -32,6 +42,12 @@ public class ProductController(IProductService productService) : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Update product quantity.
+    /// </summary>
+    /// <param name="id">Product ID.</param>
+    /// <param name="reduceQuantity">Quantity to reduce.</param>
+    /// <returns></returns>
     [HttpPut("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -60,6 +76,11 @@ public class ProductController(IProductService productService) : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Get a product by ID.
+    /// </summary>
+    /// <param name="id">Product ID.</param>
+    /// <returns>The requested product.</returns>
     [HttpGet("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDto))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -82,6 +103,10 @@ public class ProductController(IProductService productService) : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Get all products.
+    /// </summary>
+    /// <returns>All products.</returns>
     [HttpGet("")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ProductDto>))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -99,6 +124,11 @@ public class ProductController(IProductService productService) : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Delete a product by ID.
+    /// </summary>
+    /// <param name="id">Product ID.</param>
+    /// <returns></returns>
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

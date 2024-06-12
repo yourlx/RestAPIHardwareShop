@@ -32,17 +32,14 @@ public class ClientService(
         await clientRepository.DeleteAsync(id);
     }
 
-    public async Task<ClientDto> GetByFullNameAsync(string name, string surname)
+    public async Task<IEnumerable<ClientDto>> GetByFullNameAsync(string name, string surname)
     {
         var clients = await clientRepository.GetAsync();
-        var client = clients.FirstOrDefault(x => x.Name == name && x.Surname == surname);
+        clients = clients.Where(x => x.Name == name && x.Surname == surname);
 
-        if (client is null)
-        {
-            throw new ClientNotFoundException($"Client with name = {name} and surname = {surname} was not found!");
-        }
+        var clientsDto = clients.Select(mapper.Map<ClientDto>);
 
-        return mapper.Map<ClientDto>(client);
+        return clientsDto;
     }
 
     public async Task<IEnumerable<ClientDto>> GetAllAsync(int? limit, int? offset)

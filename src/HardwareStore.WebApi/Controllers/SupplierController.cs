@@ -5,12 +5,22 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HardwareStore.WebApi.Controllers;
 
+/// <summary>
+/// Suppliers API.
+/// </summary>
+/// <param name="supplierService"></param>
 [ApiController]
 [Route("api/v1/suppliers")]
+[Produces("application/json")]
 public class SupplierController(ISupplierService supplierService) : ControllerBase
 {
+    /// <summary>
+    /// Create a new supplier.
+    /// </summary>
+    /// <param name="createSupplierDto">Supplier data.</param>
+    /// <returns>The created supplier.</returns>
     [HttpPost("")]
-    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(SupplierDto))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SupplierDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CreateAsync([FromBody] CreateSupplierDto createSupplierDto)
@@ -31,6 +41,12 @@ public class SupplierController(ISupplierService supplierService) : ControllerBa
         }
     }
 
+    /// <summary>
+    /// Update supplier address.
+    /// </summary>
+    /// <param name="id">Supplier ID.</param>
+    /// <param name="addressDto">New address data.</param>
+    /// <returns></returns>
     [HttpPut("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -54,6 +70,11 @@ public class SupplierController(ISupplierService supplierService) : ControllerBa
         }
     }
 
+    /// <summary>
+    /// Delete a supplier by ID.
+    /// </summary>
+    /// <param name="id">Supplier ID.</param>
+    /// <returns></returns>
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -76,6 +97,10 @@ public class SupplierController(ISupplierService supplierService) : ControllerBa
         }
     }
 
+    /// <summary>
+    /// Get all suppliers.
+    /// </summary>
+    /// <returns>All suppliers.</returns>
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<SupplierDto>))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -93,6 +118,11 @@ public class SupplierController(ISupplierService supplierService) : ControllerBa
         }
     }
 
+    /// <summary>
+    /// Get a supplier by ID.
+    /// </summary>
+    /// <param name="id">Supplier ID.</param>
+    /// <returns>The requested supplier.</returns>
     [HttpGet("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SupplierDto))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
