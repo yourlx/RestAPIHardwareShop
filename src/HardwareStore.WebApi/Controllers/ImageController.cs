@@ -1,29 +1,30 @@
 using HardwareStore.WebApi.Data;
-using HardwareStore.WebApi.DTO;
 using HardwareStore.WebApi.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HardwareStore.WebApi.Controllers;
 
-// 1) todo: application is dying when image is big x_x (upload and update)
-// 2) todo: not downloading image when requested ;( (by id, by product id)
 [ApiController]
 [Route("api/v1/images")]
 public class ImageController(IImageService imageService) : ControllerBase
 {
     [HttpPost("")]
-    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(ImageDto))]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Guid))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> CreateAsync([FromQuery] Guid productId, [FromBody] byte[] content)
+    public async Task<IActionResult> CreateAsync([FromQuery] Guid productId, IFormFile image)
     {
         try
         {
-            var imageDto = await imageService.CreateAsync(productId, content);
+            // todo: leave conversion here or move to service?
+            using var memoryStream = new MemoryStream();
+            await image.CopyToAsync(memoryStream);
 
-            return Ok(imageDto);
+            var id = await imageService.CreateAsync(productId, memoryStream.ToArray());
+
+            return Ok(id);
         }
         catch (ProductNotFoundException exception)
         {
@@ -44,11 +45,15 @@ public class ImageController(IImageService imageService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, [FromBody] byte[] content)
+    public async Task<IActionResult> UpdateAsync([FromRoute] Guid id, IFormFile image)
     {
         try
         {
-            await imageService.UpdateAsync(id, content);
+            // todo: leave conversion here or move to service?
+            using var memoryStream = new MemoryStream();
+            await image.CopyToAsync(memoryStream);
+
+            await imageService.UpdateAsync(id, memoryStream.ToArray());
 
             return Ok();
         }
@@ -85,15 +90,16 @@ public class ImageController(IImageService imageService) : ControllerBase
     }
 
     [HttpGet("byProduct/{id:guid}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FileContentResult))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetByProductIdAsync([FromRoute] Guid id)
     {
         try
         {
-            // todo:
-            return Ok();
+            var image = await imageService.GetByProductIdAsync(id);
+
+            return File(image.Content, "application/octet-stream", "file.png");
         }
         catch (ImageNotFoundException exception)
         {
@@ -110,15 +116,16 @@ public class ImageController(IImageService imageService) : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FileContentResult))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAsync([FromRoute] Guid id)
     {
         try
         {
-            // todo:
-            return Ok();
+            var image = await imageService.GetAsync(id);
+
+            return File(image.Content, "application/octet-stream", "file.png");
         }
         catch (ImageNotFoundException exception)
         {

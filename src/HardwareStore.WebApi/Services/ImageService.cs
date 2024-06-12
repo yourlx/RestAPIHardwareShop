@@ -11,25 +11,25 @@ public class ImageService(
     IProductRepository productRepository)
     : IImageService
 {
-    public async Task<ImageDto> CreateAsync(Guid productId, byte[] content)
+    public async Task<Guid> CreateAsync(Guid productId, byte[] content)
     {
-        var image = await productRepository.GetAsync(productId);
+        var product = await productRepository.GetAsync(productId);
 
-        if (image.Image is not null)
+        if (product.Image is not null)
         {
             throw new ProductHasImageException(
-                $"Product with id = {productId} already has image with id = {image.Image.Id}");
+                $"Product with id = {productId} already has image with id = {product.Image.Id}");
         }
 
-        image.Image = new Image
+        product.Image = new Image
         {
             Id = new Guid(),
             Content = content
         };
 
-        await productRepository.UpdateAsync(image);
+        await productRepository.UpdateAsync(product);
 
-        return mapper.Map<Image, ImageDto>(image.Image);
+        return product.Image.Id;
     }
 
     public async Task UpdateAsync(Guid id, byte[] content)
@@ -39,19 +39,27 @@ public class ImageService(
 
     public async Task DeleteAsync(Guid id)
     {
+        var products = await productRepository.GetAsync();
+
+        var productContainedImage = products.FirstOrDefault(x => x.Image?.Id == id);
+        if (productContainedImage is not null)
+        {
+            productContainedImage.Image = null;
+        }
+        
         await imageRepository.DeleteAsync(id);
     }
 
     public async Task<ImageDto> GetByProductIdAsync(Guid id)
     {
-        var image = await productRepository.GetAsync(id);
+        var product = await productRepository.GetAsync(id);
 
-        if (image.Image is null)
+        if (product.Image is null)
         {
             throw new ImageNotFoundException($"Product with id = {id} has no image!");
         }
 
-        return mapper.Map<ImageDto>(image);
+        return mapper.Map<ImageDto>(product.Image);
     }
 
     public async Task<ImageDto> GetAsync(Guid id)

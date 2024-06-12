@@ -4,7 +4,7 @@ namespace HardwareStore.WebApi.Services;
 
 public interface IImageService
 {
-    Task<ImageDto> CreateAsync(Guid productId, byte[] content);
+    Task<Guid> CreateAsync(Guid productId, byte[] content);
 
     Task UpdateAsync(Guid id, byte[] content);
 
