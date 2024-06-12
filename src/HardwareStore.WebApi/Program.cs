@@ -1,3 +1,4 @@
+using System.Reflection;
 using HardwareStore.WebApi.Context;
 using HardwareStore.WebApi.Data;
 using HardwareStore.WebApi.Services;
@@ -24,7 +25,12 @@ builder.Services.AddScoped<ISupplierService, SupplierService>();
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(x =>
+{
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.XML";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    x.IncludeXmlComments(xmlPath, includeControllerXmlComments: true);
+});
 
 var app = builder.Build();
 
