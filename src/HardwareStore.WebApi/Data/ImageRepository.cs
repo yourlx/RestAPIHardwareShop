@@ -4,29 +4,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HardwareStore.WebApi.Data;
 
-public class ImageRepository : IImageRepository
+public class ImageRepository(HardwareStoreContext context) : IImageRepository
 {
-    private readonly HardwareStoreContext _context;
-
-    public ImageRepository(HardwareStoreContext context)
-    {
-        _context = context;
-    }
-
     public async Task AddAsync(Image item)
     {
-        await _context.Images.AddAsync(item);
-        await _context.SaveChangesAsync();
+        await context.Images.AddAsync(item);
+        await context.SaveChangesAsync();
     }
 
     public async Task<IEnumerable<Image>> GetAsync()
     {
-        return await _context.Images.ToListAsync();
+        return await context.Images.ToListAsync();
     }
 
     public async Task<Image> GetAsync(Guid id)
     {
-        var image = await _context.Images.FirstOrDefaultAsync(x => x.Id == id);
+        var image = await context.Images.FirstOrDefaultAsync(x => x.Id == id);
 
         if (image is null)
         {
@@ -39,19 +32,18 @@ public class ImageRepository : IImageRepository
     public async Task UpdateAsync(Image item)
     {
         var image = await GetAsync(item.Id);
-
-        // todo: remake?
+        
         image.Content = item.Content;
 
-        await _context.SaveChangesAsync();
+        await context.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(Guid id)
     {
         var image = await GetAsync(id);
 
-        _context.Images.Remove(image);
+        context.Images.Remove(image);
 
-        await _context.SaveChangesAsync();
+        await context.SaveChangesAsync();
     }
 }

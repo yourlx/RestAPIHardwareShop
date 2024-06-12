@@ -21,6 +21,10 @@ public class SupplierController(ISupplierService supplierService) : ControllerBa
 
             return Ok(supplierDto);
         }
+        catch (PhoneNumberFormatException exception)
+        {
+            return BadRequest(exception.Message);
+        }
         catch (Exception exception)
         {
             return StatusCode(StatusCodes.Status500InternalServerError, "Unknown error");

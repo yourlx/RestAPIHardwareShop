@@ -4,24 +4,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HardwareStore.WebApi.Data;
 
-public class ProductRepository : IProductRepository
+public class ProductRepository(HardwareStoreContext context) : IProductRepository
 {
-    private readonly HardwareStoreContext _context;
-
-    public ProductRepository(HardwareStoreContext context)
-    {
-        _context = context;
-    }
-
     public async Task AddAsync(Product item)
     {
-        await _context.Products.AddAsync(item);
-        await _context.SaveChangesAsync();
+        await context.Products.AddAsync(item);
+        await context.SaveChangesAsync();
     }
 
     public async Task<IEnumerable<Product>> GetAsync()
     {
-        return await _context.Products.Include(x => x.Image)
+        return await context.Products.Include(x => x.Image)
             .Include(x => x.Supplier)
             .ThenInclude(x => x.Address)
             .ToListAsync();
@@ -29,7 +22,7 @@ public class ProductRepository : IProductRepository
 
     public async Task<Product> GetAsync(Guid id)
     {
-        var product = await _context.Products.Include(x => x.Image)
+        var product = await context.Products.Include(x => x.Image)
             .Include(x => x.Supplier)
             .ThenInclude(x => x.Address)
             .FirstOrDefaultAsync(x => x.Id == id);
@@ -45,24 +38,23 @@ public class ProductRepository : IProductRepository
     public async Task UpdateAsync(Product item)
     {
         var product = await GetAsync(item.Id);
-
-        // todo: remake?
-        product.AvailableStock = item.AvailableStock;
-        product.Category = item.Category;
-        product.Image = item.Image;
+        
         product.Name = item.Name;
+        product.Category = item.Category;
         product.Price = item.Price;
+        product.AvailableStock = item.AvailableStock;
         product.LastUpdate = item.LastUpdate;
         product.Supplier = item.Supplier;
+        product.Image = item.Image; // before update - delete old?
 
-        await _context.SaveChangesAsync();
+        await context.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(Guid id)
     {
         var product = await GetAsync(id);
 
-        _context.Products.Remove(product);
-        await _context.SaveChangesAsync();
+        context.Products.Remove(product);
+        await context.SaveChangesAsync();
     }
 }

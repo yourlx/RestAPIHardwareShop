@@ -4,31 +4,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HardwareStore.WebApi.Data;
 
-public class SupplierRepository : ISupplierRepository
+public class SupplierRepository(HardwareStoreContext context) : ISupplierRepository
 {
-    private readonly HardwareStoreContext _context;
-
-    public SupplierRepository(HardwareStoreContext context)
-    {
-        _context = context;
-    }
-
     public async Task AddAsync(Supplier item)
     {
-        // todo: add check for phone number?
-
-        await _context.Suppliers.AddAsync(item);
-        await _context.SaveChangesAsync();
+        await context.Suppliers.AddAsync(item);
+        await context.SaveChangesAsync();
     }
 
     public async Task<IEnumerable<Supplier>> GetAsync()
     {
-        return await _context.Suppliers.Include(x => x.Address).ToListAsync();
+        return await context.Suppliers.Include(x => x.Address).ToListAsync();
     }
 
     public async Task<Supplier> GetAsync(Guid id)
     {
-        var supplier = await _context.Suppliers.Include(x => x.Address).FirstOrDefaultAsync(x => x.Id == id);
+        var supplier = await context.Suppliers.Include(x => x.Address).FirstOrDefaultAsync(x => x.Id == id);
 
         if (supplier is null)
         {
@@ -42,19 +33,18 @@ public class SupplierRepository : ISupplierRepository
     {
         var supplier = await GetAsync(item.Id);
 
-        // todo: remake?
         supplier.Name = item.Name;
-        supplier.Address = item.Address;
+        supplier.Address = item.Address; // before update - delete old?
         supplier.PhoneNumber = item.PhoneNumber;
 
-        await _context.SaveChangesAsync();
+        await context.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(Guid id)
     {
         var supplier = await GetAsync(id);
 
-        _context.Suppliers.Remove(supplier);
-        await _context.SaveChangesAsync();
+        context.Suppliers.Remove(supplier);
+        await context.SaveChangesAsync();
     }
 }

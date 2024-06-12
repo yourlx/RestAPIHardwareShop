@@ -4,29 +4,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HardwareStore.WebApi.Data;
 
-public class AddressRepository : IAddressRepository
+public class AddressRepository(HardwareStoreContext context) : IAddressRepository
 {
-    private readonly HardwareStoreContext _context;
-
-    public AddressRepository(HardwareStoreContext context)
-    {
-        _context = context;
-    }
-    
     public async Task AddAsync(Address item)
     {
-        await _context.Addresses.AddAsync(item);
-        await _context.SaveChangesAsync();
+        await context.Addresses.AddAsync(item);
+        await context.SaveChangesAsync();
     }
 
     public async Task<IEnumerable<Address>> GetAsync()
     {
-        return await _context.Addresses.ToListAsync();
+        return await context.Addresses.ToListAsync();
     }
 
     public async Task<Address> GetAsync(Guid id)
     {
-        var address = await _context.Addresses.FirstOrDefaultAsync(x => x.Id == id);
+        var address = await context.Addresses.FirstOrDefaultAsync(x => x.Id == id);
 
         if (address is null)
         {
@@ -39,20 +32,19 @@ public class AddressRepository : IAddressRepository
     public async Task UpdateAsync(Address item)
     {
         var address = await GetAsync(item.Id);
-
-        // todo: remake?
-        address.City = item.City;
+        
         address.Country = item.Country;
+        address.City = item.City;
         address.Street = item.Street;
         
-        await _context.SaveChangesAsync();
+        await context.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(Guid id)
     {
         var address = await GetAsync(id);
 
-        _context.Addresses.Remove(address);
-        await _context.SaveChangesAsync();
+        context.Addresses.Remove(address);
+        await context.SaveChangesAsync();
     }
 }

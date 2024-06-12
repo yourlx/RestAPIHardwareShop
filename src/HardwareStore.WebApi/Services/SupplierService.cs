@@ -1,66 +1,68 @@
-﻿using AutoMapper;
+﻿using System.Text.RegularExpressions;
+using AutoMapper;
 using HardwareStore.WebApi.Data;
 using HardwareStore.WebApi.DTO;
 using HardwareStore.WebApi.Models;
 
 namespace HardwareStore.WebApi.Services;
 
-public class SupplierService : ISupplierService
+public class SupplierService(
+    IMapper mapper,
+    ISupplierRepository supplierRepository,
+    IAddressRepository addressRepository)
+    : ISupplierService
 {
-    private readonly IMapper _mapper;
-    private readonly ISupplierRepository _supplierRepository;
-    private readonly IAddressRepository _addressRepository;
-
-    public SupplierService(IMapper mapper, ISupplierRepository supplierRepository, IAddressRepository addressRepository)
-    {
-        _mapper = mapper;
-        _supplierRepository = supplierRepository;
-        _addressRepository = addressRepository;
-    }
+    private static readonly string _phoneNumberPattern = @"^\+7\d{10}$";
 
     public async Task<SupplierDto> CreateAsync(CreateSupplierDto supplierDto)
     {
-        var supplier = _mapper.Map<Supplier>(supplierDto);
+        var correctNumber = Regex.IsMatch(supplierDto.PhoneNumber, _phoneNumberPattern);
+        if (!correctNumber)
+        {
+            throw new PhoneNumberFormatException("Wrong phone number format!");
+        }
+
+        var supplier = mapper.Map<Supplier>(supplierDto);
 
         supplier.Id = new Guid();
 
-        await _supplierRepository.AddAsync(supplier);
+        await supplierRepository.AddAsync(supplier);
 
-        return _mapper.Map<SupplierDto>(supplier);
+        return mapper.Map<SupplierDto>(supplier);
     }
 
     public async Task UpdateAddressAsync(Guid id, AddressDto newAddressDto)
     {
-        var supplier = await _supplierRepository.GetAsync(id);
+        var supplier = await supplierRepository.GetAsync(id);
 
-        var newAddress = _mapper.Map<Address>(newAddressDto);
+        var newAddress = mapper.Map<Address>(newAddressDto);
         newAddress.Id = supplier.Address.Id;
 
-        await _addressRepository.UpdateAsync(newAddress);
+        await addressRepository.UpdateAsync(newAddress);
     }
 
     public async Task DeleteAsync(Guid id)
     {
-        var supplier = await _supplierRepository.GetAsync(id);
+        var supplier = await supplierRepository.GetAsync(id);
 
-        await _addressRepository.DeleteAsync(supplier.Address.Id);
-        
-        await _supplierRepository.DeleteAsync(id);
+        await addressRepository.DeleteAsync(supplier.Address.Id);
+
+        await supplierRepository.DeleteAsync(id);
     }
 
     public async Task<IEnumerable<SupplierDto>> GetAllAsync()
     {
-        var suppliers = await _supplierRepository.GetAsync();
+        var suppliers = await supplierRepository.GetAsync();
 
-        var suppliersDto = suppliers.Select(x => _mapper.Map<SupplierDto>(x));
+        var suppliersDto = suppliers.Select(mapper.Map<SupplierDto>);
 
         return suppliersDto;
     }
 
     public async Task<SupplierDto> GetAsync(Guid id)
     {
-        var supplier = await _supplierRepository.GetAsync(id);
+        var supplier = await supplierRepository.GetAsync(id);
 
-        return _mapper.Map<SupplierDto>(supplier);
+        return mapper.Map<SupplierDto>(supplier);
     }
 }

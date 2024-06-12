@@ -5,40 +5,31 @@ using HardwareStore.WebApi.Models;
 
 namespace HardwareStore.WebApi.Services;
 
-public class ProductService : IProductService
+public class ProductService(
+    IMapper mapper,
+    IProductRepository productRepository,
+    ISupplierRepository supplierRepository,
+    IImageRepository imageRepository)
+    : IProductService
 {
-    private readonly IMapper _mapper;
-    private readonly IProductRepository _productRepository;
-    private readonly ISupplierRepository _supplierRepository;
-    private readonly IImageRepository _imageRepository;
-
-    public ProductService(IMapper mapper, IProductRepository productRepository, ISupplierRepository supplierRepository,
-        IImageRepository imageRepository)
-    {
-        _mapper = mapper;
-        _productRepository = productRepository;
-        _supplierRepository = supplierRepository;
-        _imageRepository = imageRepository;
-    }
-
     public async Task<ProductDto> CreateAsync(CreateProductDto productDto)
     {
-        var supplier = await _supplierRepository.GetAsync(productDto.SupplierId);
+        var supplier = await supplierRepository.GetAsync(productDto.SupplierId);
 
-        var product = _mapper.Map<Product>(productDto);
+        var product = mapper.Map<Product>(productDto);
 
         product.Id = new Guid();
         product.LastUpdate = DateTime.UtcNow;
         product.Supplier = supplier;
 
-        await _productRepository.AddAsync(product);
+        await productRepository.AddAsync(product);
 
-        return _mapper.Map<ProductDto>(product);
+        return mapper.Map<ProductDto>(product);
     }
 
     public async Task UpdateQuantityAsync(Guid id, int reduceQuantity)
     {
-        var product = await _productRepository.GetAsync(id);
+        var product = await productRepository.GetAsync(id);
 
         if (product.AvailableStock - reduceQuantity < 0)
         {
@@ -48,34 +39,34 @@ public class ProductService : IProductService
 
         product.AvailableStock -= reduceQuantity;
 
-        await _productRepository.UpdateAsync(product);
+        await productRepository.UpdateAsync(product);
     }
 
     public async Task<ProductDto> GetAsync(Guid id)
     {
-        var product = await _productRepository.GetAsync(id);
+        var product = await productRepository.GetAsync(id);
 
-        return _mapper.Map<ProductDto>(product);
+        return mapper.Map<ProductDto>(product);
     }
 
     public async Task<IEnumerable<ProductDto>> GetAllAsync()
     {
-        var products = await _productRepository.GetAsync();
+        var products = await productRepository.GetAsync();
 
-        var productsDto = products.Select(x => _mapper.Map<ProductDto>(x));
+        var productsDto = products.Select(mapper.Map<ProductDto>);
 
         return productsDto;
     }
 
     public async Task DeleteAsync(Guid id)
     {
-        var product = await _productRepository.GetAsync(id);
+        var product = await productRepository.GetAsync(id);
 
         if (product.Image is not null)
         {
-            await _imageRepository.DeleteAsync(product.Image.Id);
+            await imageRepository.DeleteAsync(product.Image.Id);
         }
 
-        await _productRepository.DeleteAsync(id);
+        await productRepository.DeleteAsync(id);
     }
 }
