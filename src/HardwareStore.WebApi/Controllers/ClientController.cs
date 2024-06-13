@@ -19,6 +19,9 @@ public class ClientController(IClientService clientService) : ControllerBase
     /// </summary>
     /// <param name="createClientDto">Client data.</param>
     /// <returns>The created client.</returns>
+    /// <response code="200">OK.</response>
+    /// <response code="400">Bad Request. Input data invalid.</response>
+    /// <response code="500">Interval Server Error.</response>
     [HttpPost("")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -42,6 +45,9 @@ public class ClientController(IClientService clientService) : ControllerBase
     /// </summary>
     /// <param name="id">Client ID.</param>
     /// <returns></returns>
+    /// <response code="200">OK.</response>
+    /// <response code="404">Not found.</response>
+    /// <response code="500">Interval Server Error.</response>
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -70,6 +76,9 @@ public class ClientController(IClientService clientService) : ControllerBase
     /// <param name="name">Client's name.</param>
     /// <param name="surname">Client's surname.</param>
     /// <returns>Clients matching the provided name and surname.</returns>
+    /// <response code="200">OK.</response>
+    /// <response code="400">Bad request. Input data invalid.</response>
+    /// <response code="500">Interval Server Error.</response>
     [HttpGet("search")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ClientDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -94,6 +103,8 @@ public class ClientController(IClientService clientService) : ControllerBase
     /// <param name="limit">Maximum number of clients to retrieve.</param>
     /// <param name="offset">Number of clients to skip.</param>
     /// <returns>All clients.</returns>
+    /// <response code="200">OK.</response>
+    /// <response code="500">Interval Server Error.</response>
     [HttpGet("")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ClientDto>))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -116,6 +127,10 @@ public class ClientController(IClientService clientService) : ControllerBase
     /// </summary>
     /// <param name="id">Client ID.</param>
     /// <param name="addressDto">New address data.</param>
+    /// <response code="200">OK.</response>
+    /// <response code="400">Bad request. Input data invalid.</response>
+    /// <response code="404">Not found.</response>
+    /// <response code="500">Interval Server Error.</response>
     /// <returns></returns>
     [HttpPut("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]

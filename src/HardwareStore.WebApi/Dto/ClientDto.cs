@@ -1,18 +1,12 @@
 ﻿namespace HardwareStore.WebApi.DTO;
 
-public class ClientDto
-{
-    public Guid Id { get; set; }
-
-    public string Name { get; set; }
-
-    public string Surname { get; set; }
-
-    public DateOnly Birthday { get; set; }
-
-    public string Gender { get; set; }
-    
-    // public DateTime RegistrationDate { get; set; } // uncomment or delete?
-
-    public AddressDto Address { get; set; }
-}
+/// <summary>
+/// Client DTO.
+/// </summary>
+/// <param name="Id">Client ID.</param>
+/// <param name="Name">Client name.</param>
+/// <param name="Surname">Client surname.</param>
+/// <param name="Birthday">Client birthday.</param>
+/// <param name="Gender">Client gender.</param>
+/// <param name="Address">Client address.</param>
+public record ClientDto(Guid Id, string Name, string Surname, DateOnly Birthday, string Gender, AddressDto Address);

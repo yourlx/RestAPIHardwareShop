@@ -19,6 +19,11 @@ public class ImageController(IImageService imageService) : ControllerBase
     /// <param name="productId">Product ID.</param>
     /// <param name="image">Image content.</param>
     /// <returns>Created image ID.</returns>
+    /// <response code="200">OK.</response>
+    /// <response code="400">Bad request. Input data invalid.</response>
+    /// <response code="404">Not found.</response>
+    /// <response code="409">Conflict. Product already have image.</response>
+    /// <response code="500">Interval Server Error.</response>
     [HttpPost("")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Guid))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -57,6 +62,10 @@ public class ImageController(IImageService imageService) : ControllerBase
     /// <param name="id">Image ID.</param>
     /// <param name="image">New image content.</param>
     /// <returns></returns>
+    /// <response code="200">OK.</response>
+    /// <response code="400">Bad request. Input data invalid.</response>
+    /// <response code="404">Not found.</response>
+    /// <response code="500">Interval Server Error.</response>
     [HttpPut("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -90,6 +99,9 @@ public class ImageController(IImageService imageService) : ControllerBase
     /// </summary>
     /// <param name="id">Image ID.</param>
     /// <returns></returns>
+    /// <response code="200">OK.</response>
+    /// <response code="404">Not found.</response>
+    /// <response code="500">Interval Server Error.</response>
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -117,6 +129,9 @@ public class ImageController(IImageService imageService) : ControllerBase
     /// </summary>
     /// <param name="id">Product ID.</param>
     /// <returns>Image content.</returns>
+    /// <response code="200">OK.</response>
+    /// <response code="404">Not found.</response>
+    /// <response code="500">Interval Server Error.</response>
     [HttpGet("byProduct/{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FileContentResult))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -148,6 +163,9 @@ public class ImageController(IImageService imageService) : ControllerBase
     /// </summary>
     /// <param name="id">Image ID.</param>
     /// <returns>Image content.</returns>
+    /// <response code="200">OK.</response>
+    /// <response code="404">Not found.</response>
+    /// <response code="500">Interval Server Error.</response>
     [HttpGet("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FileContentResult))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

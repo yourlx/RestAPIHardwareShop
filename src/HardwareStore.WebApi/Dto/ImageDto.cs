@@ -1,8 +1,8 @@
 ﻿namespace HardwareStore.WebApi.DTO;
 
-public class ImageDto
-{
-    public Guid Id { get; set; }
-    
-    public byte[] Content { get; set; }
-}
+/// <summary>
+/// Image DTO.
+/// </summary>
+/// <param name="Id">Image ID.</param>
+/// <param name="Content">Image content in byte array format.</param>
+public record ImageDto(Guid Id, byte[] Content);

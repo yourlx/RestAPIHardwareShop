@@ -19,6 +19,9 @@ public class SupplierController(ISupplierService supplierService) : ControllerBa
     /// </summary>
     /// <param name="createSupplierDto">Supplier data.</param>
     /// <returns>The created supplier.</returns>
+    /// <response code="200">OK.</response>
+    /// <response code="400">Bad request. Input data invalid.</response>
+    /// <response code="500">Interval Server Error.</response>
     [HttpPost("")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SupplierDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -47,6 +50,10 @@ public class SupplierController(ISupplierService supplierService) : ControllerBa
     /// <param name="id">Supplier ID.</param>
     /// <param name="addressDto">New address data.</param>
     /// <returns></returns>
+    /// <response code="200">OK.</response>
+    /// <response code="400">Bad request. Input data invalid.</response>
+    /// <response code="404">Not found.</response>
+    /// <response code="500">Interval Server Error.</response>
     [HttpPut("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -75,6 +82,9 @@ public class SupplierController(ISupplierService supplierService) : ControllerBa
     /// </summary>
     /// <param name="id">Supplier ID.</param>
     /// <returns></returns>
+    /// <response code="200">OK.</response>
+    /// <response code="404">Not found.</response>
+    /// <response code="500">Interval Server Error.</response>
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -101,7 +111,9 @@ public class SupplierController(ISupplierService supplierService) : ControllerBa
     /// Get all suppliers.
     /// </summary>
     /// <returns>All suppliers.</returns>
-    [HttpGet]
+    /// <response code="200">OK.</response>
+    /// <response code="500">Interval Server Error.</response>
+    [HttpGet("")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<SupplierDto>))]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAllAsync()
@@ -123,6 +135,9 @@ public class SupplierController(ISupplierService supplierService) : ControllerBa
     /// </summary>
     /// <param name="id">Supplier ID.</param>
     /// <returns>The requested supplier.</returns>
+    /// <response code="200">OK.</response>
+    /// <response code="404">Not found.</response>
+    /// <response code="500">Interval Server Error.</response>
     [HttpGet("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SupplierDto))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

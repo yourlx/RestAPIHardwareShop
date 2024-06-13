@@ -1,20 +1,22 @@
 ﻿namespace HardwareStore.WebApi.DTO;
 
-public class ProductDto
-{
-    public Guid Id { get; set; }
-
-    public string Name { get; set; }
-
-    public string Category { get; set; }
-
-    public decimal Price { get; set; }
-
-    public int AvailableStock { get; set; }
-
-    public DateTime LastUpdate { get; set; }
-
-    public SupplierDto Supplier { get; set; }
-
-    public ImageDto? Image { get; set; }
-}
+/// <summary>
+/// Product DTO.
+/// </summary>
+/// <param name="Id">Product ID.</param>
+/// <param name="Name">Product name.</param>
+/// <param name="Category">Product category.</param>
+/// <param name="Price">Product price.</param>
+/// <param name="AvailableStock">Available stock of the product.</param>
+/// <param name="LastUpdate">Last update date and time of the product.</param>
+/// <param name="Supplier">Supplier information.</param>
+/// <param name="Image">Image information.</param>
+public record ProductDto(
+    Guid Id,
+    string Name,
+    string Category,
+    decimal Price,
+    int AvailableStock,
+    DateTime LastUpdate,
+    SupplierDto Supplier,
+    ImageDto? Image);

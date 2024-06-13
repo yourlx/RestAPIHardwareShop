@@ -1,10 +1,9 @@
 ﻿namespace HardwareStore.WebApi.DTO;
 
-public class CreateSupplierDto
-{
-    public string Name { get; set; }
-    
-    public AddressDto Address { get; set; }
-    
-    public string PhoneNumber { get; set; }
-}
+/// <summary>
+/// Create Supplier DTO.
+/// </summary>
+/// <param name="Name">Supplier name.</param>
+/// <param name="Address">Supplier address.</param>
+/// <param name="PhoneNumber">Supplier phone number.</param>
+public record CreateSupplierDto(string Name, AddressDto Address, string PhoneNumber);
