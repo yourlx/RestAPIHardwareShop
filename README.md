@@ -45,8 +45,10 @@ dotnet run --project HardwareStore.WebApi
 2. Build the Docker image and run the containers using Docker Compose:
 
 ```bash
-ASPNETCORE_ENVIRONMENT=Development docker-compose up
+docker-compose up
 ```
+
+[//]: # (ASPNETCORE_ENVIRONMENT=Production docker-compose up)
 
 3. Ensure that the containers are running using the `docker ps` command or Docker Desktop.
 
