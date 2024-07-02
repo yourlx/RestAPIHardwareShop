@@ -3,12 +3,12 @@
 /// <summary>
 /// Product DTO.
 /// </summary>
-/// <param name="Id">Product ID.</param>
-/// <param name="Name">Product name.</param>
-/// <param name="Category">Product category.</param>
-/// <param name="Price">Product price.</param>
-/// <param name="AvailableStock">Available stock of the product.</param>
-/// <param name="LastUpdate">Last update date and time of the product.</param>
+/// <param name="Id" example="3fa85f64-5717-4562-b3fc-2c963f66afa6">Product ID.</param>
+/// <param name="Name" example="Laptop">Product name.</param>
+/// <param name="Category" example="Electronics">Product category.</param>
+/// <param name="Price" example="999.99">Product price.</param>
+/// <param name="AvailableStock" example="50">Available stock of the product.</param>
+/// <param name="LastUpdate" example="2024-07-02T14:30:00Z">Last update date and time of the product.</param>
 /// <param name="Supplier">Supplier information.</param>
 /// <param name="Image">Image information.</param>
 public record ProductDto(
