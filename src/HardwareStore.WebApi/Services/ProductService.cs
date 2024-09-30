@@ -38,6 +38,7 @@ public class ProductService(
         }
 
         product.AvailableStock -= reduceQuantity;
+        product.LastUpdate = DateTime.UtcNow;
 
         await productRepository.UpdateAsync(product);
     }

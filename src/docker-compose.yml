@@ -11,8 +11,8 @@
       - "8080:8080"
       - "8081:8081"
     environment:
-      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT:-Production}
-      - ConnectionStrings__DbConnectionString=Host=hardwarestore.database;Port=5432;User ID=postgres;Password=postgres;Database=postgres
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT:-Development}
+      - ConnectionStrings__DbConnectionString=Host=hardwarestore.database;Port=5432;User ID=postgres;Password=postgres;Database=hardwarestore
         
   hardwarestore.database:
     image: postgres:15
